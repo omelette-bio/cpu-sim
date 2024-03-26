@@ -1,0 +1,74 @@
+use crate::registers::{Registers, Value, Context};
+
+
+pub enum OpCode {
+	ADD(Value, Registers), SUB(Value, Registers), MUL(Value, Registers), DIV(Value, Registers), MOVE(i32, Registers)
+}
+
+
+impl OpCode {
+	pub fn eval (&self, c: &mut Context) -> Result<(),()> {
+		match self {
+			OpCode::ADD(val, reg) => {
+				let val_g = val.get_val(c);
+				if let Err(()) = val_g { return Err(()) }
+				let val_d = reg.get_val(c);
+				if let Err(()) = val_d { return Err(()) }
+				reg.set_val(val_d? + val_g?, c);
+				Ok(())
+			},
+			OpCode::SUB(val, reg) => {
+				let val_g = val.get_val(c);
+				if let Err(()) = val_g { return Err(()) }
+				let val_d = reg.get_val(c);
+				if let Err(()) = val_d { return Err(()) }
+				reg.set_val(val_d? - val_g?, c);
+				Ok(())
+			},
+			OpCode::MUL(val, reg) => {
+				let val_g = val.get_val(c);
+				if let Err(()) = val_g { return Err(()) }
+				let val_d = reg.get_val(c);
+				if let Err(()) = val_d { return Err(()) }
+				reg.set_val(val_d? * val_g?, c);
+				Ok(())
+			},
+			OpCode::ADD(val, reg) => {
+				let val_g = val.get_val(c);
+				if let Err(()) = val_g { return Err(()) }
+				let val_d = reg.get_val(c);
+				if let Err(()) = val_d { return Err(()) }
+				reg.set_val(val_d? / val_g?, c);
+				Ok(())
+			},
+			OpCode::MOVE(val, reg) => { 
+				reg.set_val(*val, c);
+				Ok(())
+			},
+			_ => Ok(())
+		}
+	}
+}
+
+// impl OpCode{
+// 	pub fn eval(&self, f: &mut FileData) -> Result<(),()> {
+// 		match self {
+// 			OpCode::ADD(val, rd) => {
+// 				let valgt = val.get_val(f);
+// 				let valdt = f.get_register_value(rd);
+// 				if let Err(()) = valgt { return Err(()) }
+// 				let valg = valgt?;
+// 				f.attribute_to_register(valg)
+// 			}
+// 			_ => Err(()),
+// 		}
+// 		Ok(())
+// 	}
+
+// 	fn get_registers_values(rg: Registers, rd: Registers, f: &FileData) -> Result<(i32,i32),()> {
+// 		match (f.get_register_value(rg), f.get_register_value(rd)) {
+// 			(Err(()), _) | (_, Err(())) => Err(()),
+// 			(Ok(valg), Ok(vald)) => Ok((valg, vald))
+// 		}
+// 	}
+// }
