@@ -1,11 +1,8 @@
-use std::borrow::ToOwned;
-use std::clone::Clone;
 use std::collections::HashMap;
 use pest_derive::Parser;
 use pest::Parser;
 use pest::error::Error;
 use crate::opcodes::OpCode;
-use crate::registers;
 use crate::registers::{Registers, Value};
 
 #[derive(Parser)]

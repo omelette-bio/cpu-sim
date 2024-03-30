@@ -1,5 +1,6 @@
 use std::collections::HashMap;
-
+use std::fmt;
+use std::fmt::Formatter;
 
 
 #[derive(Debug)]
@@ -19,15 +20,30 @@ pub enum Registers {
 }
 
 impl Registers {
-    pub fn get_val(&self, c: &Context) -> Result<i32, ()> {
+    pub fn get_val(&self, c: &Context) -> Result<i32, String> {
         match c.register_table.get(self) {
             Some(value) => Ok(*value),
-            None => Err(())
+            None => Err(format!("no value attributed to this register : {}", self))
         }
     }
 
     pub fn set_val(&self, value: i32, c: &mut Context) {
         c.register_table.insert(*self, value);
+    }
+}
+
+impl fmt::Display for Registers {
+    fn fmt(&self, f: &mut Formatter<'_>) -> fmt::Result {
+        match self {
+            Registers::R1 => write!(f,"{}", "R1"),
+            Registers::R2 => write!(f,"{}", "R2"),
+            Registers::R3 => write!(f,"{}", "R3"),
+            Registers::R4 => write!(f,"{}", "R4"),
+            Registers::R5 => write!(f,"{}", "R5"),
+            Registers::R6 => write!(f,"{}", "R6"),
+            Registers::R7 => write!(f,"{}", "R7"),
+            Registers::R8 => write!(f,"{}", "R8"),
+        }
     }
 }
 
@@ -37,7 +53,7 @@ pub enum Value {
 }
 
 impl Value {
-    pub fn get_val(&self, c: &Context) -> Result<i32, ()> {
+    pub fn get_val(&self, c: &Context) -> Result<i32, String> {
         match self {
             Value::Num(nb) => Ok(*nb),
             Value::Reg(r) => r.get_val(c),

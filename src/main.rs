@@ -1,12 +1,12 @@
 use std::io::{self, BufRead, Write};
 
-use crate::registers::{Context, Registers, Value};
+use crate::parsing::utils;
+use crate::registers::Context;
+
 mod registers;
 
-use crate::opcodes::OpCode;
 mod opcodes;
 
-use crate::parsing::utils;
 mod parsing;
 
 
@@ -25,22 +25,19 @@ fn main() {
         let res = utils::parse_line(line.as_str());
         if let Err(m) = res { println!("wrong command: \n{}", m) }
         else {
-            let _ = res.unwrap().eval(&mut c);
-            println!("{:?}", c);
+            let res = res.unwrap();
+            let res2 = res.eval(&mut c);
+            if let Err(m) = res2 { println!("{}", m); }
+            // else { println!("{:?}", c); }
         }
     }
-
-    // let mut c = Context::new();
-    // let res = OpCode::MOVE(Value::Num(8), Registers::R1).eval(&mut c);
-    // println!("{:?}", res);
-    // println!("{:?}", c);
 }
 
 #[cfg(test)]
 mod tests {
-    use crate::registers::*;
     use crate::opcodes::OpCode;
     use crate::parsing::utils;
+    use crate::registers::*;
 
     #[test]
     fn move_int_reg() {
