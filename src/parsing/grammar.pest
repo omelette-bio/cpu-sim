@@ -1,0 +1,9 @@
+register     = { "R" ~ ('0'..'8') }
+digit        = { "$" ~ ('0'..'9') }
+data         = { digit | register }
+calc_opcode  = { "ADD" | "SUB" | "DIV" | "MUL" | "MOVE" }
+stack_opcode = { "POP" | "PUSH" }
+command      = {
+    calc_opcode ~ " " ~ data ~ " " ~ register
+  | stack_opcode ~ " " ~ register
+}

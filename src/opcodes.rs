@@ -2,7 +2,7 @@ use crate::registers::{Registers, Value, Context};
 
 
 pub enum OpCode {
-	ADD(Value, Registers), SUB(Value, Registers), MUL(Value, Registers), DIV(Value, Registers), MOVE(i32, Registers)
+	ADD(Value, Registers), SUB(Value, Registers), MUL(Value, Registers), DIV(Value, Registers), MOVE(Value, Registers)
 }
 
 
@@ -10,39 +10,23 @@ impl OpCode {
 	pub fn eval (&self, c: &mut Context) -> Result<(),()> {
 		match self {
 			OpCode::ADD(val, reg) => {
-				let val_g = val.get_val(c);
-				if let Err(()) = val_g { return Err(()) }
-				let val_d = reg.get_val(c);
-				if let Err(()) = val_d { return Err(()) }
-				reg.set_val(val_d? + val_g?, c);
+				reg.set_val(val.get_val(c)? + reg.get_val(c)?, c);
 				Ok(())
 			},
 			OpCode::SUB(val, reg) => {
-				let val_g = val.get_val(c);
-				if let Err(()) = val_g { return Err(()) }
-				let val_d = reg.get_val(c);
-				if let Err(()) = val_d { return Err(()) }
-				reg.set_val(val_d? - val_g?, c);
+				reg.set_val(val.get_val(c)? - reg.get_val(c)?, c);
 				Ok(())
 			},
 			OpCode::MUL(val, reg) => {
-				let val_g = val.get_val(c);
-				if let Err(()) = val_g { return Err(()) }
-				let val_d = reg.get_val(c);
-				if let Err(()) = val_d { return Err(()) }
-				reg.set_val(val_d? * val_g?, c);
+				reg.set_val(val.get_val(c)? * reg.get_val(c)?, c);
 				Ok(())
 			},
 			OpCode::ADD(val, reg) => {
-				let val_g = val.get_val(c);
-				if let Err(()) = val_g { return Err(()) }
-				let val_d = reg.get_val(c);
-				if let Err(()) = val_d { return Err(()) }
-				reg.set_val(val_d? / val_g?, c);
+				reg.set_val(val.get_val(c)? / reg.get_val(c)?, c);
 				Ok(())
 			},
-			OpCode::MOVE(val, reg) => { 
-				reg.set_val(*val, c);
+			OpCode::MOVE(val, reg) => {
+				reg.set_val(val.get_val(c)?, c);
 				Ok(())
 			},
 			_ => Ok(())
