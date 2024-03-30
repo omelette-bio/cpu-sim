@@ -16,13 +16,19 @@ fn prompt() {
 }
 
 fn main() {
-    // loop {
-    //     prompt();
-    //     let stdin = io::stdin();
-    //     let line = stdin.lock().lines().next().unwrap().unwrap();
-    //     let res = utils::parse_line(line.as_str());
-    //     if let Err(m) = res { println!("wrong command: \n{}", m)}
-    // }
+    let mut c = Context::new();
+    println!("{:?}", c);
+    let stdin = io::stdin();
+    loop {
+        prompt();
+        let line = stdin.lock().lines().next().unwrap().unwrap();
+        let res = utils::parse_line(line.as_str());
+        if let Err(m) = res { println!("wrong command: \n{}", m) }
+        else {
+            let _ = res.unwrap().eval(&mut c);
+            println!("{:?}", c);
+        }
+    }
 
     // let mut c = Context::new();
     // let res = OpCode::MOVE(Value::Num(8), Registers::R1).eval(&mut c);

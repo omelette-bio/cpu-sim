@@ -1,6 +1,7 @@
 use crate::registers::{Registers, Value, Context};
 
 
+#[derive(Debug)]
 pub enum OpCode {
 	ADD(Value, Registers), SUB(Value, Registers), MUL(Value, Registers), DIV(Value, Registers), MOVE(Value, Registers)
 }

@@ -31,6 +31,7 @@ impl Registers {
     }
 }
 
+#[derive(Debug)]
 pub enum Value {
     Reg(Registers), Num(i32)
 }

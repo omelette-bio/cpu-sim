@@ -4,6 +4,6 @@ data         = { digit | register }
 calc_opcode  = { "ADD" | "SUB" | "DIV" | "MUL" | "MOVE" }
 stack_opcode = { "POP" | "PUSH" }
 command      = {
-    calc_opcode ~ " " ~ data ~ " " ~ register
+    calc_opcode ~ " " ~ (digit | register) ~ " " ~ register
   | stack_opcode ~ " " ~ register
 }
