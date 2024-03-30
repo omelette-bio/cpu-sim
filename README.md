@@ -28,3 +28,20 @@ DIV reg1 reg2
 // reg = reg / value
 DIV $value reg
 ```
+
+when its launches you can do something like this :
+```bash
+Context { register_table: {} }
+assembly # MOVE $1 R1
+Context { register_table: {R1: 1} }
+assembly # ADD $42 R1
+Context { register_table: {R1: 43} }
+assembly # 
+```
+
+## Future
+plans:
+- give more clear messages
+- add a stack
+- add commands like "showStack" or "showRegisterTable"
+- make more tests to make sure is robust
