@@ -28,7 +28,6 @@ fn main() {
             let res = res.unwrap();
             let res2 = res.eval(&mut c);
             if let Err(m) = res2 { println!("{}", m); }
-            // else { println!("{:?}", c); }
         }
     }
 }

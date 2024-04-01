@@ -11,25 +11,33 @@ impl OpCode {
 	pub fn eval (&self, c: &mut Context) -> Result<(), String> {
 		match self {
 			OpCode::ADD(val, reg) => {
-				reg.set_val(val.get_val(c)? + reg.get_val(c)?, c);
+				let l_val = val.get_val(c)?;
+				reg.set_val(reg.get_val(c)? + l_val, c);
+				println!("{} := {}", reg, reg.get_val(c)?);
 				Ok(())
 			},
 			OpCode::SUB(val, reg) => {
-				reg.set_val(val.get_val(c)? - reg.get_val(c)?, c);
+				let l_val = val.get_val(c)?;
+				reg.set_val(reg.get_val(c)? - l_val, c);
+				println!("{} := {}", reg, reg.get_val(c)?);
 				Ok(())
 			},
 			OpCode::MUL(val, reg) => {
-				reg.set_val(val.get_val(c)? * reg.get_val(c)?, c);
+				let l_val = val.get_val(c)?;
+				reg.set_val(reg.get_val(c)? * l_val, c);
+				println!("{} := {}", reg, reg.get_val(c)?);
 				Ok(())
 			},
 			OpCode::DIV(val, reg) => {
-				reg.set_val(val.get_val(c)? / reg.get_val(c)?, c);
+				let l_val = val.get_val(c)?;
+				reg.set_val(reg.get_val(c)? / l_val, c);
+				println!("{} := {}", reg, reg.get_val(c)?);
 				Ok(())
 			},
 			OpCode::MOVE(val, reg) => {
 				let l_val = val.get_val(c)?;
 				reg.set_val(l_val, c);
-				println!("value {} moved into {}", l_val, reg);
+				println!("{} := {}", reg, l_val);
 				Ok(())
 			}
 		}
