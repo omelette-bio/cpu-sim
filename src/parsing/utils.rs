@@ -33,7 +33,10 @@ fn interp_val(pair: pest::iterators::Pair<Rule>) -> Value {
     match pair.as_rule() {
         Rule::digit => { Value::Num(pair.as_str()[1..].parse::<i32>().unwrap()) },
         Rule::register => { Value::Reg( *reg_map.get(pair.as_str()).unwrap() ) },
-        _ => panic!("no3")
+        _ => {
+            println!("{:?}", pair.as_str());
+            panic!("no3");
+        }
     }
 }
 
@@ -47,8 +50,17 @@ fn interp_reg(pair: pest::iterators::Pair<Rule>) -> Registers {
     }
 }
 
-pub fn parse_line(input: &str) -> Result<OpCode,Error<Rule>> {
+pub fn parse_line(input: &str) -> Result<Vec<OpCode>,Error<Rule>> {
+    let mut op_v = Vec::new();
+
     let mut pairs = IdentParser::parse(Rule::command, input)?;
-    let opc = interp(pairs.next().unwrap());
-    Ok(opc)
+
+
+    let mut pair = pairs.next();
+    while pair != Option::None {
+        op_v.push(interp(pair.clone().unwrap()));
+        pair = pair.unwrap().into_inner().nth(3);
+    }
+
+    Ok(op_v)
 }

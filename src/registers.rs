@@ -14,7 +14,7 @@ impl Context {
     }
 }
 
-#[derive(Debug, Eq, Hash, PartialEq, Copy, Clone)]
+#[derive(Debug, Eq, Hash, PartialEq, PartialOrd, Copy, Clone)]
 pub enum Registers {
     R1, R2, R3, R4, R5, R6, R7, R8
 }
@@ -47,7 +47,7 @@ impl fmt::Display for Registers {
     }
 }
 
-#[derive(Debug)]
+#[derive(Debug, PartialEq, PartialOrd)]
 pub enum Value {
     Reg(Registers), Num(i32)
 }

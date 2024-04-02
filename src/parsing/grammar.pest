@@ -1,9 +1,11 @@
+whitespace = _{ " " | "\n" | "\t" }
+
 register     = { "R" ~ ('0'..'8') }
 digit        = { "$" ~ ('0'..'9')+ }
 data         = { digit | register }
 calc_opcode  = { "ADD" | "SUB" | "DIV" | "MUL" | "MOVE" }
 stack_opcode = { "POP" | "PUSH" }
 command      = {
-    calc_opcode ~ " " ~ (digit | register) ~ " " ~ register
-  | stack_opcode ~ " " ~ register
+    whitespace* ~ calc_opcode ~ " " ~ (digit | register) ~ " " ~ register ~  (";" ~ whitespace* ~ command)?
+  | whitespace* ~ stack_opcode ~ " " ~ register ~ (whitespace* ~ command)?
 }

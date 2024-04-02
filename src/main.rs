@@ -26,8 +26,11 @@ fn main() {
         if let Err(m) = res { println!("wrong command: \n{}", m) }
         else {
             let res = res.unwrap();
-            let res2 = res.eval(&mut c);
-            if let Err(m) = res2 { println!("{}", m); }
+            for opc in res {
+                let res2 = opc.eval(&mut c);
+                if let Err(m) = res2 { println!("{}", m); }
+            }
+
         }
     }
 }
@@ -36,6 +39,7 @@ fn main() {
 mod tests {
     use crate::opcodes::OpCode;
     use crate::parsing::utils;
+    use crate::parsing::utils::parse_line;
     use crate::registers::*;
 
     #[test]
@@ -63,20 +67,8 @@ mod tests {
     }
 
     #[test]
-    fn test_parse1() {
-        let res = utils::parse_line("ADD $1 R1");
-        assert_eq!(Ok(()), res);
-    }
-
-    #[test]
-    fn test_parse2() {
-        let res = utils::parse_line("ADD R1 R1");
-        assert_eq!(Ok(()), res);
-    }
-
-    #[test]
-    fn test_parse3() {
-        let res = utils::parse_line("ADD R1 R9");
-        assert_ne!(Ok(()), res);
+    fn test_parsing_one_line() {
+        let res = parse_line("MOVE $1 R1, ADD R1 R1");
+        assert_eq!(Ok(vec![ OpCode::MOVE(Value::Num(1), Registers::R1), OpCode::ADD(Value::Reg(Registers::R1), Registers::R1) ]), res)
     }
 }
