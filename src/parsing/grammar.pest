@@ -5,7 +5,9 @@ digit        = { "$" ~ ('0'..'9')+ }
 data         = { digit | register }
 calc_opcode  = { "ADD" | "SUB" | "DIV" | "MUL" | "MOVE" }
 stack_opcode = { "POP" | "PUSH" }
+print_opcode = { "printf" }
 command      = {
-    whitespace* ~ calc_opcode ~ " " ~ (digit | register) ~ " " ~ register ~  (";" ~ whitespace* ~ command)?
-  | whitespace* ~ stack_opcode ~ " " ~ register ~ (whitespace* ~ command)?
+    whitespace* ~ calc_opcode ~ " " ~ (digit | register) ~ " " ~ register ~ (";" ~ whitespace* ~ command)?
+  | whitespace* ~ stack_opcode ~ " " ~ register ~ (";" ~ whitespace* ~ command)?
+  | print_opcode ~ " " ~ register ~ (";" ~ whitespace* ~ command)?
 }

@@ -1,42 +1,35 @@
 # cpu-sim
 
-this is a cpu simulator, that means it is a 2-adresses micro-assembly interpreter
+this is a cpu simulator, that means it is a 2-addresses micro-assembly interpreter
 there are 8 registers and for now, 5 opcodes are present :
 
 ```as
-// reg2 = reg2 + reg1
-ADD reg1 reg2
-
-// reg = reg + value
-ADD $value reg
-
-// reg2 = reg2 - reg1
-SUB reg1 reg2
-
-// reg = reg - value
-SUB $value reg
-
-// reg2 = reg2 * reg1
-MUL reg1 reg2
-
-// reg = reg * value
-MUL $value reg
-
-// reg2 = reg2 / reg1
-DIV reg1 reg2
-
-// reg = reg / value
-DIV $value reg
+(note: value can either be a digit or a register)
+ADD value register    // register = register + value
+SUB value register    // register = register - value
+MUL value register    // register = register * value
+DIV value register    // register = register / value
+MOVE value register   // register = value
+printf register       // explicit enough
 ```
 
-when its launches you can do something like this :
+the program has two options of launching:
+
+- first without file passed as argument every command will be printed like:
 ```bash
-Context { register_table: {} }
-assembly # MOVE $1 R1
-Context { register_table: {R1: 1} }
-assembly # ADD $42 R1
-Context { register_table: {R1: 43} }
+cargo run
+assembly # MOVE $4 R1
+R1 := 4
 assembly # 
+```
+
+- second with a file passed as argument nothing will be printed if there is no print statement
+```bash
+cargo run test/test1.a
+(nothing prints)
+
+cargo run test/test2.a
+R1 := 3
 ```
 
 ## Future

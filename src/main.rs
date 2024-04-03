@@ -17,6 +17,18 @@ fn prompt() {
     io::stdout().flush().unwrap();
 }
 
+fn interp_input(input: String, context: &mut Context) {
+    let res = utils::parse_line(input.as_str());
+    if let Err(m) = res { println!("wrong command: \n{}", m) }
+    else {
+        let res = res.unwrap();
+        for opc in res {
+            let res2 = opc.eval(context);
+            if let Err(m) = res2 { println!("{}", m); }
+        }
+    }
+}
+
 fn main() {
     let mut c = Context::new();
     let args: Vec<String> = env::args().collect();
@@ -27,33 +39,14 @@ fn main() {
         loop {
             prompt();
             let line = stdin.lock().lines().next().unwrap().unwrap();
-            let res = utils::parse_line(line.as_str());
-            if let Err(m) = res { println!("wrong command: \n{}", m) }
-            else {
-                let res = res.unwrap();
-                for opc in res {
-                    let res2 = opc.eval(&mut c);
-                    if let Err(m) = res2 { println!("{}", m); }
-                }
-
-            }
+            interp_input(line, &mut c);
         }
     }
     else {
         let filename = args.get(1).unwrap();
-        println!("{:?}", filename);
-        let contents = fs::read_to_string(filename)
-            .expect("Should have been able to read the file");
-
-        let res = utils::parse_line(contents.as_str());
-        if let Err(m) = res { println!("wrong command: \n{}", m) }
-        else {
-            let res = res.unwrap();
-            for opc in res {
-                let res2 = opc.eval(&mut c);
-                if let Err(m) = res2 { println!("{}", m); }
-            }
-        }
+        c.change_file_context();
+        let contents = fs::read_to_string(filename).expect("Should have been able to read the file");
+        interp_input(contents, &mut c);
     }
 }
 
