@@ -1,4 +1,6 @@
 use std::io::{self, BufRead, Write};
+use std::env;
+use std::fs;
 
 use crate::parsing::utils;
 use crate::registers::Context;
@@ -17,12 +19,33 @@ fn prompt() {
 
 fn main() {
     let mut c = Context::new();
-    println!("{:?}", c);
-    let stdin = io::stdin();
-    loop {
-        prompt();
-        let line = stdin.lock().lines().next().unwrap().unwrap();
-        let res = utils::parse_line(line.as_str());
+    let args: Vec<String> = env::args().collect();
+
+    // if no file is provided
+    if args.len() == 1 {
+        let stdin = io::stdin();
+        loop {
+            prompt();
+            let line = stdin.lock().lines().next().unwrap().unwrap();
+            let res = utils::parse_line(line.as_str());
+            if let Err(m) = res { println!("wrong command: \n{}", m) }
+            else {
+                let res = res.unwrap();
+                for opc in res {
+                    let res2 = opc.eval(&mut c);
+                    if let Err(m) = res2 { println!("{}", m); }
+                }
+
+            }
+        }
+    }
+    else {
+        let filename = args.get(1).unwrap();
+        println!("{:?}", filename);
+        let contents = fs::read_to_string(filename)
+            .expect("Should have been able to read the file");
+
+        let res = utils::parse_line(contents.as_str());
         if let Err(m) = res { println!("wrong command: \n{}", m) }
         else {
             let res = res.unwrap();
@@ -30,7 +53,6 @@ fn main() {
                 let res2 = opc.eval(&mut c);
                 if let Err(m) = res2 { println!("{}", m); }
             }
-
         }
     }
 }
