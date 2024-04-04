@@ -3,7 +3,7 @@ use pest_derive::Parser;
 use pest::Parser;
 use pest::error::Error;
 use crate::opcodes::OpCode;
-use crate::registers::{Registers, Value};
+use crate::data_manipulation::{Registers, Value};
 
 #[derive(Parser)]
 #[grammar = "parsing/grammar.pest"]

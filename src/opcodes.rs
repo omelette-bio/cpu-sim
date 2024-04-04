@@ -1,4 +1,5 @@
-use crate::registers::{Registers, Value, Context};
+use crate::data_manipulation::{Registers, Value};
+use crate::context::Context;
 
 
 #[derive(Debug, PartialOrd, PartialEq)]

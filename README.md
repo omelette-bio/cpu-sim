@@ -38,3 +38,5 @@ plans:
 - add a stack
 - add commands like "showStack" or "showRegisterTable"
 - make more tests to make sure is robust
+
+check the [documentation](docs/doc.md) if you want to know more about how the project works

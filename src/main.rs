@@ -2,14 +2,15 @@ use std::io::{self, BufRead, Write};
 use std::env;
 use std::fs;
 
-use crate::parsing::utils;
-use crate::registers::Context;
-
-mod registers;
-
-mod opcodes;
-
+use parsing::utils;
 mod parsing;
+
+mod data_manipulation;
+mod opcodes;
+use context::Context;
+mod context;
+
+
 
 
 fn prompt() {
@@ -55,7 +56,8 @@ mod tests {
     use crate::opcodes::OpCode;
     use crate::parsing::utils;
     use crate::parsing::utils::parse_line;
-    use crate::registers::*;
+    use crate::data_manipulation::*;
+    use crate::context::Context;
 
     #[test]
     fn move_int_reg() {
