@@ -8,6 +8,7 @@ mod parsing;
 mod data_manipulation;
 mod opcodes;
 use context::Context;
+
 mod context;
 
 
@@ -18,16 +19,17 @@ fn prompt() {
     io::stdout().flush().unwrap();
 }
 
-fn interp_input(input: String, context: &mut Context) {
+fn interp_input(input: String, context: &mut Context) -> Result<(), ()>{
     let res = utils::parse_line(input.as_str());
-    if let Err(m) = res { println!("wrong command: \n{}", m) }
+    if let Err(m) = res { println!("wrong command: \n{}", m); return Err(()); }
     else {
         let res = res.unwrap();
         for opc in res {
             let res2 = opc.eval(context);
-            if let Err(m) = res2 { println!("{}", m); }
+            if let Err(m) = res2 { println!("{}", m); return Err(()); }
         }
     }
+    Ok(())
 }
 
 fn main() {
@@ -40,24 +42,25 @@ fn main() {
         loop {
             prompt();
             let line = stdin.lock().lines().next().unwrap().unwrap();
-            interp_input(line, &mut c);
+            let _ = interp_input(line, &mut c);
         }
     }
     else {
         let filename = args.get(1).unwrap();
         c.change_file_context();
         let contents = fs::read_to_string(filename).expect("Should have been able to read the file");
-        interp_input(contents, &mut c);
+        let _ = interp_input(contents, &mut c);
     }
 }
 
 #[cfg(test)]
 mod tests {
+    use std::fs;
     use crate::opcodes::OpCode;
-    use crate::parsing::utils;
     use crate::parsing::utils::parse_line;
     use crate::data_manipulation::*;
     use crate::context::Context;
+    use crate::interp_input;
 
     #[test]
     fn move_int_reg() {
@@ -85,7 +88,46 @@ mod tests {
 
     #[test]
     fn test_parsing_one_line() {
-        let res = parse_line("MOVE $1 R1, ADD R1 R1");
+        let res = parse_line("MOVE $1 R1; ADD R1 R1");
         assert_eq!(Ok(vec![ OpCode::MOVE(Value::Num(1), Registers::R1), OpCode::ADD(Value::Reg(Registers::R1), Registers::R1) ]), res)
+    }
+
+    #[test]
+    fn test_parsing_one_line_error_digit() {
+        let res = parse_line("MOVE 1 R1; ADD R1 R1");
+        assert!(matches!(res, Err(_)))
+    }
+
+    #[test]
+    fn test_parsing_one_line_register_out_of_bounds() {
+        let res = parse_line("MOVE $1 R9");
+        assert!(matches!(res, Err(_)))
+    }
+
+    #[test]
+    fn test_value_of_r1_end_of_test_file_1() {
+        let mut c = Context::new();
+        c.change_file_context();
+        let contents = fs::read_to_string("test/test1.a").expect("Should have been able to read the file");
+        let _ = interp_input(contents, &mut c);
+        assert_eq!(6, Registers::R1.get_val(&c).unwrap())
+    }
+
+    #[test]
+    fn test_value_of_r1_end_of_test_file_2() {
+        let mut c = Context::new();
+        c.change_file_context();
+        let contents = fs::read_to_string("test/test2.a").expect("Should have been able to read the file");
+        let _ = interp_input(contents, &mut c);
+        assert_eq!(6, Registers::R1.get_val(&c).unwrap())
+    }
+
+    #[test]
+    fn test_of_test_file_3() {
+        let mut c = Context::new();
+        c.change_file_context();
+        let contents = fs::read_to_string("test/test3.a").expect("Should have been able to read the file");
+        let res = interp_input(contents, &mut c);
+        assert!(matches!(res, Err(_)))
     }
 }

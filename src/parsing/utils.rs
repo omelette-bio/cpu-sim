@@ -58,9 +58,9 @@ pub fn parse_line(input: &str) -> Result<Vec<OpCode>,Error<Rule>> {
 
 
     let mut pair = pairs.next();
-    while pair != Option::None {
+    while pair != Option::None && pair.clone().unwrap().as_rule() == Rule::command {
         op_v.push(interp(pair.clone().unwrap()));
-        pair = pair.unwrap().into_inner().nth(3);
+        pair = pair.unwrap().into_inner().last();
     }
 
     Ok(op_v)
