@@ -10,8 +10,7 @@ mod opcodes;
 use context::Context;
 
 mod context;
-
-
+mod error;
 
 
 fn prompt() {

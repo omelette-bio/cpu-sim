@@ -16,12 +16,17 @@ fn interp(pair: pest::iterators::Pair<Rule>) -> OpCode {
             let mut pair = pair.into_inner();
             let opc = pair.next().unwrap();
             match opc.as_str() {
-                "ADD" => OpCode::ADD( interp_val( pair.next().unwrap()), interp_reg(pair.next().unwrap() )),
-                "SUB" => OpCode::SUB( interp_val( pair.next().unwrap()), interp_reg(pair.next().unwrap() )),
-                "MUL" => OpCode::MUL( interp_val( pair.next().unwrap()), interp_reg(pair.next().unwrap() )),
-                "DIV" => OpCode::DIV( interp_val( pair.next().unwrap()), interp_reg(pair.next().unwrap() )),
-                "MOVE" => OpCode::MOVE( interp_val( pair.next().unwrap()), interp_reg(pair.next().unwrap() )),
-                "printf" => OpCode::PRINTF( interp_reg( pair.next().unwrap() )),
+                "ADD" => OpCode::ADD( interp_val( pair.next().unwrap()), interp_reg(pair.next().unwrap()) ),
+                "SUB" => OpCode::SUB( interp_val( pair.next().unwrap()), interp_reg(pair.next().unwrap()) ),
+                "MUL" => OpCode::MUL( interp_val( pair.next().unwrap()), interp_reg(pair.next().unwrap()) ),
+                "DIV" => OpCode::DIV( interp_val( pair.next().unwrap()), interp_reg(pair.next().unwrap()) ),
+                "MOVE" => OpCode::MOVE( interp_val( pair.next().unwrap()), interp_reg(pair.next().unwrap()) ),
+                "AND" => OpCode::AND( interp_val( pair.next().unwrap()), interp_reg(pair.next().unwrap()) ),
+                "OR" => OpCode::OR( interp_val( pair.next().unwrap()), interp_reg(pair.next().unwrap()) ),
+                "NOT" => OpCode::NOT( interp_reg(pair.next().unwrap()) ),
+                "printf" => OpCode::PRINTF( interp_reg( pair.next().unwrap()) ),
+                "POP" => OpCode::POP( interp_reg( pair.next().unwrap() ) ),
+                "PUSH" => OpCode::PUSH( interp_reg( pair.next().unwrap() ) ),
                 _ => panic!("no1")
             }
         }

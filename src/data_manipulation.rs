@@ -1,6 +1,7 @@
 use std::fmt;
 use std::fmt::Formatter;
 use crate::context::Context;
+use crate::error::Error;
 
 #[derive(Debug, Eq, Hash, PartialEq, PartialOrd, Copy, Clone)]
 pub enum Registers {
@@ -8,15 +9,12 @@ pub enum Registers {
 }
 
 impl Registers {
-    pub fn get_val(&self, c: &Context) -> Result<i32, String> {
-        match c.register_table.get(self) {
-            Some(value) => Ok(*value),
-            None => Err(format!("no value attributed to this register : {}", self))
-        }
+    pub fn get_val(&self, c: &Context) -> Result<i32, Error> {
+        c.get(*self)
     }
 
     pub fn set_val(&self, value: i32, c: &mut Context) {
-        c.register_table.insert(*self, value);
+        c.set(*self, value)
     }
 }
 
@@ -41,7 +39,7 @@ pub enum Value {
 }
 
 impl Value {
-    pub fn get_val(&self, c: &Context) -> Result<i32, String> {
+    pub fn get_val(&self, c: &Context) -> Result<i32, Error> {
         match self {
             Value::Num(nb) => Ok(*nb),
             Value::Reg(r) => r.get_val(c),
