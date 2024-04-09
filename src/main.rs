@@ -14,7 +14,7 @@ mod error;
 
 
 fn prompt() {
-    print!("assembly # ");
+    print!("μAssembly # ");
     io::stdout().flush().unwrap();
 }
 
