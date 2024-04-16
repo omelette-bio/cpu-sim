@@ -20,11 +20,14 @@ one_add_opcode = {
     "POP"
   | "PUSH"
   | "NOT"
-  | "JUMP"
   | "printf"
+}
+jump_opcode = {
+    "JUMP"
 }
 
 command = {
     whitespace* ~ two_add_opcode ~ " " ~ (digit | register) ~ " " ~ register ~ (";" ~ whitespace* ~ command)?
   | whitespace* ~ one_add_opcode ~ " " ~ register ~ (";" ~ whitespace* ~ command)?
+  | whitespace* ~ jump_opcode ~ " " ~ (digit | register) ~ (";" ~ whitespace* ~ command)?
 }

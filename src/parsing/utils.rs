@@ -27,6 +27,7 @@ fn interp(pair: pest::iterators::Pair<Rule>) -> OpCode {
                 "printf" => OpCode::PRINTF( interp_reg( pair.next().unwrap()) ),
                 "POP" => OpCode::POP( interp_reg( pair.next().unwrap() ) ),
                 "PUSH" => OpCode::PUSH( interp_reg( pair.next().unwrap() ) ),
+                "JUMP" => OpCode::JUMP( interp_val( pair.next().unwrap() ) ),
                 _ => panic!("no1")
             }
         }

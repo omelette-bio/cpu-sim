@@ -30,26 +30,40 @@ printf register       // explicit enough
 the program has two options of launching:
 
 - first without file passed as argument every command will be printed like:
-```bash
+```
 cargo run
-assembly # MOVE $4 R1
+μAssembly # MOVE $4 R1
 R1 := 4
-assembly # 
+μAssembly # MOVE $0 R2
+R2 := 0
+μAssembly # DIV R2 R1
+Cannot divide, R2 is evaluated to zero
+μAssembly # MOVE $3 R3; ADD R3 R2
+R3 := 3
+R2 := 3
+μAssembly # JUMP $3
+Cannot branch in this context !
 ```
 
 - second with a file passed as argument nothing will be printed if there is no print statement
-```bash
+```
 cargo run test/test1.a
 (nothing prints)
 
 cargo run test/test2.a
 R1 := 3
 R1 := 6
+
+cargo run test/test3.a
+The register R1 is not initialized
+
+cargo run test/test4.a
+R2 := 48
 ```
 
 ## Future
 plans:
-- add conditional and unconditional branches
+- add conditional and ~~unconditional branches~~
 - give more clear messages
 - ~~add a stack~~
 - add commands like "showStack" or "showRegisterTable"

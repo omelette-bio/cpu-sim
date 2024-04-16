@@ -41,6 +41,8 @@ impl Context {
 
     pub fn get_stack_index(&self) -> usize { self.stack_index }
 
+    pub fn set_stack_index(&mut self, val: usize) { self.stack_index = val }
+
     pub fn get_exec_stack_end(&self) -> usize { self.exec_stack.len() }
 
     pub fn get_current_command(&self) -> OpCode { self.exec_stack[self.stack_index].clone() }

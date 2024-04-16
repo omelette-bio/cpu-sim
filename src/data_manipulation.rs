@@ -41,8 +41,17 @@ pub enum Value {
 impl Value {
     pub fn get_val(&self, c: &Context) -> Result<i32, Error> {
         match self {
-            Value::Num(nb) => Ok(*nb),
             Value::Reg(r) => r.get_val(c),
+            Value::Num(nb) => Ok(*nb),
+        }
+    }
+}
+
+impl fmt::Display for Value {
+    fn fmt(&self, f: &mut Formatter<'_>) -> fmt::Result {
+        match self {
+            Value::Reg(r) => write!(f,"{}",r),
+            Value::Num(n) => write!(f,"{}",n)
         }
     }
 }

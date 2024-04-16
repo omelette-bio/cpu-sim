@@ -1,6 +1,8 @@
 use std::io::{self, BufRead, Write};
 use std::env;
 use std::fs;
+use colored::Colorize;
+
 
 use parsing::utils;
 mod parsing;
@@ -14,7 +16,7 @@ mod error;
 
 
 fn prompt() {
-    print!("μAssembly # ");
+    print!("{}", "μAssembly # ".green());
     io::stdout().flush().unwrap();
 }
 
@@ -26,14 +28,13 @@ fn interp_input(input: String, context: &mut Context) -> Result<(), ()>{
         false => {
             for opc in res.unwrap() {
                 let res2 = opc.eval(context);
-                if let Err(m) = res2 { println!("{}", m); return Err(()); }
+                if let Err(m) = res2 { println!("{}", m.to_string().red()); return Err(()); }
             }
         }
         true => {
             while context.get_stack_index() < context.get_exec_stack_end() {
                 let r = context.get_current_command().eval(context);
                 if let Err(m) = r { println!("{}", m); return Err(()); }
-                context.increment_stack_index();
             }
         }
     }

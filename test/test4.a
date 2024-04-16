@@ -1,0 +1,6 @@
+MOVE $1 R1;
+ADD $1 R1;
+MOVE $48 R2;
+JUMP $2;
+printf R1;
+printf R2
