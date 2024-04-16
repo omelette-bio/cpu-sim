@@ -12,7 +12,6 @@ pub enum OpCode {
 	JUMP(Value), BEZ(Value, Registers), BNEZ(Value, Registers),
 	PRINTF(Registers)
 }
-// AND OR NOT TLT TEQ Jump BNEZ BEZ POP PUSH
 
 impl OpCode {
 	pub fn eval (&self, c: &mut Context) -> Result<(), Error> {
@@ -113,11 +112,13 @@ impl OpCode {
 				Ok(())
 			}
 			OpCode::BEZ(val, reg) => {
+				if !c.is_in_file() { return Err( Error::BranchNotInFileContext ) }
 				if reg.get_val(c)? == 0 { OpCode::JUMP(val.clone()).eval(c)?; }
 				else { c.increment_program_counter(); }
 				Ok(())
 			}
 			OpCode::BNEZ(val, reg) => {
+				if !c.is_in_file() { return Err( Error::BranchNotInFileContext ) }
 				if reg.get_val(c)? != 0 { OpCode::JUMP(val.clone()).eval(c)?; }
 				else { c.increment_program_counter(); }
 				Ok(())

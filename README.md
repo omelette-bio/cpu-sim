@@ -8,7 +8,9 @@ registers to develop.
 
 ## commands
 
-note : value keyword means either a digit or a register
+notes : 
+- value keyword means either a digit or a register
+- PC stands for program counter, which is an index over lines of a program
 
 <table>
 
@@ -72,6 +74,14 @@ note : value keyword means either a digit or a register
 <tr>
 <td>JUMP value</td>
 <td>PC = PC + value</td>
+</tr>
+<tr>
+<td>BNEZ value register</td>
+<td>PC = PC + value if register != 0</td>
+</tr>
+<tr>
+<td>BEZ value register</td>
+<td>PC = PC + value if register = 0</td>
 </tr>
 
 <tr>
