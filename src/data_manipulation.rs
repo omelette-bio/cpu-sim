@@ -33,7 +33,7 @@ impl fmt::Display for Registers {
     }
 }
 
-#[derive(Debug, PartialEq, PartialOrd)]
+#[derive(Debug, PartialEq, PartialOrd, Clone)]
 pub enum Value {
     Reg(Registers), Num(i32)
 }

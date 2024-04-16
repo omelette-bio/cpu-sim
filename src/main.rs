@@ -20,12 +20,21 @@ fn prompt() {
 
 fn interp_input(input: String, context: &mut Context) -> Result<(), ()>{
     let res = utils::parse_line(input.as_str());
-    if let Err(m) = res { println!("wrong command: \n{}", m); return Err(()); }
-    else {
-        let res = res.unwrap();
-        for opc in res {
-            let res2 = opc.eval(context);
-            if let Err(m) = res2 { println!("{}", m); return Err(()); }
+    if let Err(m) = res { println!("{}", m); return Err(()); }
+    if context.is_in_file() { context.change_exec_stack( res.clone().unwrap() ) }
+    match context.is_in_file() {
+        false => {
+            for opc in res.unwrap() {
+                let res2 = opc.eval(context);
+                if let Err(m) = res2 { println!("{}", m); return Err(()); }
+            }
+        }
+        true => {
+            while context.get_stack_index() < context.get_exec_stack_end() {
+                let r = context.get_current_command().eval(context);
+                if let Err(m) = r { println!("{}", m); return Err(()); }
+                context.increment_stack_index();
+            }
         }
     }
     Ok(())

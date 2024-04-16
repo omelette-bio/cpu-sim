@@ -1,17 +1,30 @@
-whitespace   = _{ " " | "\n" | "\t" | "\r" }
- 
- label = {  ( ('a'..'z') | ('A'..'Z') ) ~ ( ( ('a'..'z') | ('A'..'Z') ) | ('0'..'9') )* ~ ":" }
- 
- register     = { "R" ~ ('0'..'8') }
- digit        = { "$" ~ ('0'..'9')+ }
- 
- two_add_opcode  = { "ADD" | "SUB" | "DIV" | "MUL" | "MOVE" | "AND" | "OR" }
- one_add_opcode = { "POP" | "PUSH" | "NOT" }
- print_opcode = { "printf" }
- 
- command      = {
-     whitespace* ~ two_add_opcode ~ " " ~ (digit | register) ~ " " ~ register ~ (";" ~ whitespace* ~ command)?
-   | whitespace* ~ one_add_opcode ~ " " ~ register ~ (";" ~ whitespace* ~ command)?
-   | print_opcode ~ " " ~ register ~ (";" ~ whitespace* ~ command)?
-   | label ~ (whitespace* ~ command)?
- }
+whitespace = _{ " " | "\n" | "\t" | "\r" }
+
+register = { "R" ~ ('0'..'8') }
+digit    = { "$" ~ ('0'..'9')+ }
+
+two_add_opcode = {
+    "ADD"
+  | "SUB"
+  | "DIV"
+  | "MUL"
+  | "MOVE"
+  | "AND"
+  | "OR"
+  | "TLT"
+  | "TEQ"
+  | "BNEZ"
+  | "BEZ"
+}
+one_add_opcode = {
+    "POP"
+  | "PUSH"
+  | "NOT"
+  | "JUMP"
+  | "printf"
+}
+
+command = {
+    whitespace* ~ two_add_opcode ~ " " ~ (digit | register) ~ " " ~ register ~ (";" ~ whitespace* ~ command)?
+  | whitespace* ~ one_add_opcode ~ " " ~ register ~ (";" ~ whitespace* ~ command)?
+}

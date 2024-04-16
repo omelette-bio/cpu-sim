@@ -1,4 +1,5 @@
 MOVE $1 R1;
 ADD $2 R1;
 printf R1;
-ADD R1 R1
+ADD R1 R1;
+printf R1
