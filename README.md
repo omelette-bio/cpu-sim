@@ -8,32 +8,80 @@ registers to develop.
 
 ## commands
 
-```as
-(note: value can either be a digit or a register)
+note : value keyword means either a digit or a register
 
-// arithmetical operations
-ADD value register    // register = register + value
-SUB value register    // register = register - value
-MUL value register    // register = register * value
-DIV value register    // register = register / value
+<table>
 
-// set a register value
-MOVE value register   // register = value
+<tr>
+<td colspan="2">Arithmetical Operations</td>
+</tr>
+<tr>
+<td>ADD value register</td>
+<td>register = register + value</td>
+</tr>
+<tr>
+<td>SUB value register</td>
+<td>register = register - value</td>
+</tr>
+<tr>
+<td>MUL value register</td>
+<td>register = register * value</td>
+</tr>
+<tr>
+<td>DIV value register</td>
+<td>register = register / value</td>
+</tr>
 
-// bitwise operations
-AND value register    // register = register AND value
-OR value register     // register = register OR value
-NOT register          // register = NOT register
+<tr>
+<td colspan="2">Bitwise Operations</td>
+</tr>
 
-// stack manipulation
-POP register          // register = stack_summit (stack_summit is removed)
-PUSH register         // puts the register value on the stack (register value is not reset)
 
-// branch operations
-JUMP value            // add value to the program counter
+<tr>
+<td>AND value register</td>
+<td>register = register & value</td>
+</tr>
+<tr>
+<td>OR value register</td>
+<td>register = register | value</td>
+</tr>
+<tr>
+<td>NOT value register</td>
+<td>invert bits of the register's value</td>
+</tr>
 
-printf register       // explicit enough
-```
+<tr>
+<td colspan="2">Data Manipulation and Heap</td>
+</tr>
+<tr>
+<td>MOVE value register</td>
+<td>register = value</td>
+</tr>
+<tr>
+<td> POP register </td>
+<td> removes top of the stack and put the value in register </td>
+</tr>
+<tr>
+<td> PUSH register </td>
+<td> puts register value to the stack summit </td>
+</tr>
+
+<tr>
+<td colspan="2">Branching and Program Counter Manipulation</td>
+</tr>
+<tr>
+<td>JUMP value</td>
+<td>PC = PC + value</td>
+</tr>
+
+<tr>
+<td colspan="2">Other</td>
+</tr>
+<tr>
+<td>printf register</td>
+<td>prints register's value to the terminal</td>
+</tr>
+</table>
 
 ## how to use it
 
