@@ -90,7 +90,7 @@ impl OpCode {
 			}
 			OpCode::JUMP(val) => {
 				if !c.is_in_file() { return Err( Error::BranchNotInFileContext ) }
-				c.set_stack_index( c.get_stack_index() + val.get_val(c)? as usize );
+				c.set_stack_index( (c.get_stack_index() as isize + val.get_val(c)? as isize) as usize );
 				Ok(())
 			}
 		}

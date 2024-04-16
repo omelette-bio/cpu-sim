@@ -1,7 +1,7 @@
 whitespace = _{ " " | "\n" | "\t" | "\r" }
 
 register = { "R" ~ ('0'..'8') }
-digit    = { "$" ~ ('0'..'9')+ }
+digit    = { "$" ~ "-"? ~ ('0'..'9')+ }
 
 two_add_opcode = {
     "ADD"

@@ -28,7 +28,7 @@ fn interp_input(input: String, context: &mut Context) -> Result<(), ()>{
         false => {
             for opc in res.unwrap() {
                 let res2 = opc.eval(context);
-                if let Err(m) = res2 { println!("{}", m.to_string().red()); return Err(()); }
+                if let Err(m) = res2 { println!("{}", m); return Err(()); }
             }
         }
         true => {
