@@ -1,7 +1,12 @@
 # cpu-sim
 
-this is a cpu simulator, that means it is a 2-addresses micro-assembly interpreter
-there are 8 registers and for now, 5 opcodes are present :
+## what is this ?
+
+cpu-sim is a personal project where I try to make a micro-assembly interpreter in rust.
+The language contains less opcode than a regular assembly and the memory management is way easier, plus there are 8
+registers to develop.
+
+## commands
 
 ```as
 (note: value can either be a digit or a register)
@@ -16,7 +21,7 @@ DIV value register    // register = register / value
 MOVE value register   // register = value
 
 // bitwise operations
-AND value regitser    // register = register AND value
+AND value register    // register = register AND value
 OR value register     // register = register OR value
 NOT register          // register = NOT register
 
@@ -24,8 +29,13 @@ NOT register          // register = NOT register
 POP register          // register = stack_summit (stack_summit is removed)
 PUSH register         // puts the register value on the stack (register value is not reset)
 
+// branch operations
+JUMP value            // add value to the program counter
+
 printf register       // explicit enough
 ```
+
+## how to use it
 
 the program has two options of launching:
 
@@ -59,6 +69,9 @@ The register R1 is not initialized
 
 cargo run test/test4.a
 R2 := 48
+
+cargo run test/test5.a
+infinite loop
 ```
 
 ## Future
