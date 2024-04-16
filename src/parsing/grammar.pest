@@ -13,8 +13,9 @@ two_add_opcode = {
   | "OR"
   | "TLT"
   | "TEQ"
-  | "BNEZ"
+  | "TLE"
   | "BEZ"
+  | "BNEZ"
 }
 one_add_opcode = {
     "POP"

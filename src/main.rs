@@ -32,7 +32,7 @@ fn interp_input(input: String, context: &mut Context) -> Result<(), ()>{
             }
         }
         true => {
-            while context.get_stack_index() < context.get_exec_stack_end() {
+            while context.get_program_counter() < context.get_exec_stack_end() {
                 let r = context.get_current_command().eval(context);
                 if let Err(m) = r { println!("{}", m); return Err(()); }
             }

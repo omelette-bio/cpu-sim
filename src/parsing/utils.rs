@@ -28,6 +28,11 @@ fn interp(pair: pest::iterators::Pair<Rule>) -> OpCode {
                 "POP" => OpCode::POP( interp_reg( pair.next().unwrap() ) ),
                 "PUSH" => OpCode::PUSH( interp_reg( pair.next().unwrap() ) ),
                 "JUMP" => OpCode::JUMP( interp_val( pair.next().unwrap() ) ),
+                "TLT" => OpCode::TLT( interp_val( pair.next().unwrap()), interp_reg(pair.next().unwrap() ) ),
+                "TLE" => OpCode::TLE( interp_val( pair.next().unwrap()), interp_reg(pair.next().unwrap() ) ),
+                "TEQ" => OpCode::TEQ( interp_val( pair.next().unwrap()), interp_reg(pair.next().unwrap() ) ),
+                "BNEZ" => OpCode::BNEZ( interp_val( pair.next().unwrap()), interp_reg(pair.next().unwrap() ) ),
+                "BEZ" => OpCode::BEZ( interp_val( pair.next().unwrap()), interp_reg(pair.next().unwrap() ) ),
                 _ => panic!("no1")
             }
         }

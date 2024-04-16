@@ -11,11 +11,11 @@ pub struct Context {
     // if the interpretation has been launched with a file
     in_file: bool,
     exec_stack: Vec<OpCode>,
-    stack_index: usize,
+    program_counter: usize,
 }
 
 impl Context {
-    pub fn new() -> Self { Context { register_table: HashMap::new(), stack: Vec::new(), in_file: false, exec_stack: Vec::new(), stack_index: 0 } }
+    pub fn new() -> Self { Context { register_table: HashMap::new(), stack: Vec::new(), in_file: false, exec_stack: Vec::new(), program_counter: 0 } }
 
     pub fn change_file_context(&mut self) { self.in_file = self.in_file == false; }
 
@@ -39,13 +39,18 @@ impl Context {
 
     pub fn change_exec_stack(&mut self, exec_stack: Vec<OpCode>) { self.exec_stack = exec_stack }
 
-    pub fn get_stack_index(&self) -> usize { self.stack_index }
+    pub fn get_program_counter(&self) -> usize { self.program_counter }
 
-    pub fn set_stack_index(&mut self, val: usize) { self.stack_index = val }
+    pub fn set_program_counter(&mut self, val: usize) -> Result<(), Error> {
+        if val >= self.exec_stack.len(){ return Err(Error::PCSegFault(val, self.get_exec_stack_end()-1)) }
+        self.program_counter = val;
+        Ok(())
+    }
+
+    pub fn increment_program_counter(&mut self) { self.program_counter += 1; }
 
     pub fn get_exec_stack_end(&self) -> usize { self.exec_stack.len() }
 
-    pub fn get_current_command(&self) -> OpCode { self.exec_stack[self.stack_index].clone() }
+    pub fn get_current_command(&self) -> OpCode { self.exec_stack[self.program_counter].clone() }
 
-    pub fn increment_stack_index(&mut self) { self.stack_index += 1; }
 }
