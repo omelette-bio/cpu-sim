@@ -14,63 +14,53 @@ pub enum OpCode {
 }
 
 impl OpCode {
+	fn continue_eval(c: &mut Context, reg: &Registers) -> Result<(), Error> {
+		if !c.is_in_file() { println!("{} := {}", reg, reg.get_val(c)?); }
+		else { c.increment_program_counter(); }
+		Ok(())
+	}
+
 	pub fn eval (&self, c: &mut Context) -> Result<(), Error> {
 		match self {
 			OpCode::ADD(val, reg) => {
 				let l_val = val.get_val(c)?;
 				reg.set_val(reg.get_val(c)? + l_val, c);
-				if !c.is_in_file() { println!("{} := {}", reg, reg.get_val(c)?); }
-				else { c.increment_program_counter(); }
-				Ok(())
+				OpCode::continue_eval(c, reg)
 			},
 			OpCode::SUB(val, reg) => {
 				let l_val = val.get_val(c)?;
 				reg.set_val(reg.get_val(c)? - l_val, c);
-				if !c.is_in_file() { println!("{} := {}", reg, reg.get_val(c)?); }
-				else { c.increment_program_counter(); }
-				Ok(())
+				OpCode::continue_eval(c, reg)
 			},
 			OpCode::MUL(val, reg) => {
 				let l_val = val.get_val(c)?;
 				reg.set_val(reg.get_val(c)? * l_val, c);
-				if !c.is_in_file() { println!("{} := {}", reg, reg.get_val(c)?); }
-				else { c.increment_program_counter(); }
-				Ok(())
+				OpCode::continue_eval(c, reg)
 			},
 			OpCode::DIV(val, reg) => {
 				let l_val = val.get_val(c)?;
 				if l_val == 0 { return Err(Error::DivisionByZero(val.clone())) }
 				reg.set_val(reg.get_val(c)? / l_val, c);
-				if !c.is_in_file() { println!("{} := {}", reg, reg.get_val(c)?); }
-				else { c.increment_program_counter(); }
-				Ok(())
+				OpCode::continue_eval(c, reg)
 			},
 			OpCode::MOVE(val, reg) => {
 				let l_val = val.get_val(c)?;
 				reg.set_val(l_val, c);
-				if !c.is_in_file() { println!("{} := {}", reg, l_val); }
-				else { c.increment_program_counter(); }
-				Ok(())
+				OpCode::continue_eval(c, reg)
 			},
 			OpCode::AND(val, reg) => {
 				let l_val = val.get_val(c)?;
 				reg.set_val(reg.get_val(c)? & l_val, c);
-				if !c.is_in_file() { println!("{} := {}", reg, reg.get_val(c)?); }
-				else { c.increment_program_counter(); }
-				Ok(())
+				OpCode::continue_eval(c, reg)
 			},
 			OpCode::OR(val, reg) => {
 				let l_val = val.get_val(c)?;
 				reg.set_val(reg.get_val(c)? | l_val, c);
-				if !c.is_in_file() { println!("{} := {}", reg, reg.get_val(c)?); }
-				else { c.increment_program_counter(); }
-				Ok(())
+				OpCode::continue_eval(c, reg)
 			},
 			OpCode::NOT(reg) => {
 				reg.set_val(!reg.get_val(c)?, c);
-				if !c.is_in_file() { println!("{} := {}", reg, reg.get_val(&c)?); }
-				else { c.increment_program_counter(); }
-				Ok(())
+				OpCode::continue_eval(c, reg)
 			},
 			OpCode::PRINTF(reg) => {
 				println!("{} := {}", reg, reg.get_val(c)?);
@@ -79,9 +69,7 @@ impl OpCode {
 			},
 			OpCode::POP(reg) => {
 				reg.set_val(c.pop_stack()?, c);
-				if !c.is_in_file() { println!("{} := {}", reg, reg.get_val(&c)?); }
-				else { c.increment_program_counter(); }
-				Ok(())
+				OpCode::continue_eval(c, reg)
 			},
 			OpCode::PUSH(reg) => {
 				c.push_stack(reg.get_val(c)?);
