@@ -1,8 +1,5 @@
-use std::io::{self, BufRead, Write};
 use std::env;
 use std::fs;
-use colored::Colorize;
-
 
 use parsing::utils;
 mod parsing;
@@ -12,13 +9,9 @@ mod opcodes;
 use context::Context;
 
 mod context;
+
+use error::Error;
 mod error;
-
-
-fn prompt() {
-    print!("{}", "μAssembly # ".green());
-    io::stdout().flush().unwrap();
-}
 
 fn interp_input(input: String, context: &mut Context) -> Result<(), ()>{
     let res = utils::parse_line(input.as_str());
@@ -46,19 +39,13 @@ fn main() {
     let args: Vec<String> = env::args().collect();
 
     // if no file is provided
-    if args.len() == 1 {
-        let stdin = io::stdin();
-        loop {
-            prompt();
-            let line = stdin.lock().lines().next().unwrap().unwrap();
-            let _ = interp_input(line, &mut c);
-        }
-    }
-    else {
+    if args.len() == 2 {
         let filename = args.get(1).unwrap();
         c.change_file_context();
         let contents = fs::read_to_string(filename).expect("Should have been able to read the file");
         let _ = interp_input(contents, &mut c);
+    } else {
+        println!("{}", Error::NoFileInputed);
     }
 }
 

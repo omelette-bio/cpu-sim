@@ -8,7 +8,8 @@ pub enum Error {
     RegisterNotInitialized(Registers),
     BranchNotInFileContext,
     DivisionByZero(Value),
-    PCSegFault(usize, usize)
+    PCSegFault(usize, usize),
+    NoFileInputed
 }
 
 impl Display for Error {
@@ -19,7 +20,8 @@ impl Display for Error {
             Error::RegisterNotInitialized(r) => write!(f,"{}The register {} is not initialized", err_begin, r.to_string().yellow()),
             Error::BranchNotInFileContext => write!(f,"{}Cannot branch in this context !", err_begin),
             Error::DivisionByZero(v) => write!(f,"{}Cannot divide, {} is evaluated to zero", err_begin, v.to_string().yellow()),
-            Error::PCSegFault(n, m) => write!(f,"{}Program counter {} is too far in the program, {} is the line of end", err_begin, n.to_string().yellow(), m.to_string().yellow())
+            Error::PCSegFault(n, m) => write!(f,"{}Program counter {} is too far in the program, {} is the line of end", err_begin, n.to_string().yellow(), m.to_string().yellow()),
+            Error::NoFileInputed => write!(f,"{}No file is inputed !", err_begin)
         }
     }
 }
