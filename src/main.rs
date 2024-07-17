@@ -1,129 +1,29 @@
-use std::env;
-use std::fs;
-
-use parsing::utils;
-mod parsing;
-
+mod context;
+mod error;
+mod stack;
 mod data_manipulation;
 mod opcodes;
-use context::Context;
 
-mod context;
-
-use error::Error;
-mod error;
-
-fn interp_input(input: String, context: &mut Context) -> Result<(), ()>{
-    let res = utils::parse_line(input.as_str());
-    if let Err(m) = res { println!("{}", m); return Err(()); }
-    if context.is_in_file() { context.change_exec_stack( res.clone().unwrap() ) }
-    match context.is_in_file() {
-        false => {
-            for opc in res.unwrap() {
-                let res2 = opc.eval(context);
-                if let Err(m) = res2 { println!("{}", m); return Err(()); }
-            }
-        }
-        true => {
-            while context.get_program_counter() < context.get_exec_stack_end() {
-                let r = context.get_current_command().eval(context);
-                if let Err(m) = r { println!("{}", m); return Err(()); }
-            }
-        }
-    }
-    Ok(())
-}
+use crate::context::{ContextManip, FileContext, LineContext};
+use crate::context::Context::File;
+use crate::data_manipulation::{Registers, Value};
+use crate::opcodes::OpCode;
 
 fn main() {
-    let mut c = Context::new();
-    let args: Vec<String> = env::args().collect();
+    let mut fc = FileContext::default();
+    fc.push_stack(3);
+    fc.push_stack(6);
+    println!("{:?}, {:?}", fc.pop_stack(), fc.pop_stack());
 
-    // if no file is provided
-    if args.len() == 2 {
-        let filename = args.get(1).unwrap();
-        c.change_file_context();
-        let contents = fs::read_to_string(filename).expect("Should have been able to read the file");
-        let _ = interp_input(contents, &mut c);
-    } else {
-        println!("{}", Error::NoFileInputed);
-    }
-}
+    let mut context = FileContext::default();
+    let inst1 = OpCode::MOVE(Value::Num(4), Registers::R1);
+    let inst2 = OpCode::MOVE(Value::Num(5), Registers::R2);
+    let inst3 = OpCode::ADD(Value::Reg(Registers::R1), Registers::R2);
 
-#[cfg(test)]
-mod tests {
-    use std::fs;
-    use crate::opcodes::OpCode;
-    use crate::parsing::utils::parse_line;
-    use crate::data_manipulation::*;
-    use crate::context::Context;
-    use crate::interp_input;
+    inst1.eval(&mut context).expect("TODO: panic message");
+    inst2.eval(&mut context).expect("");
+    inst3.eval(&mut context).expect("");
 
-    #[test]
-    fn move_int_reg() {
-        let mut c = Context::new();
-        let _ = OpCode::MOVE(Value::Num(12), Registers::R1).eval(&mut c);
-        assert_eq!(Ok(12), Registers::R1.get_val(&c));
-    }
-
-    #[test]
-    fn add_two_reg() {
-        let mut c = Context::new();
-        let _ = OpCode::MOVE(Value::Num(8), Registers::R1).eval(&mut c);
-        let _ = OpCode::MOVE(Value::Num(6), Registers::R2).eval(&mut c);
-        let _ = OpCode::ADD(Value::Reg(Registers::R1), Registers::R2).eval(&mut c);
-        assert_eq!(Ok(14), Registers::R2.get_val(&c));
-    }
-
-    #[test]
-    fn add_two_reg_not_init() {
-        let mut c = Context::new();
-        let _ = OpCode::MOVE(Value::Num(8), Registers::R1).eval(&mut c);
-        let _ = OpCode::ADD(Value::Reg(Registers::R1), Registers::R2).eval(&mut c);
-        assert_ne!(Ok(8), Registers::R2.get_val(&c));
-    }
-
-    #[test]
-    fn test_parsing_one_line() {
-        let res = parse_line("MOVE $1 R1; ADD R1 R1");
-        assert_eq!(Ok(vec![ OpCode::MOVE(Value::Num(1), Registers::R1), OpCode::ADD(Value::Reg(Registers::R1), Registers::R1) ]), res)
-    }
-
-    #[test]
-    fn test_parsing_one_line_error_digit() {
-        let res = parse_line("MOVE 1 R1; ADD R1 R1");
-        assert!(matches!(res, Err(_)))
-    }
-
-    #[test]
-    fn test_parsing_one_line_register_out_of_bounds() {
-        let res = parse_line("MOVE $1 R9");
-        assert!(matches!(res, Err(_)))
-    }
-
-    #[test]
-    fn test_value_of_r1_end_of_test_file_1() {
-        let mut c = Context::new();
-        c.change_file_context();
-        let contents = fs::read_to_string("test/test1.a").expect("Should have been able to read the file");
-        let _ = interp_input(contents, &mut c);
-        assert_eq!(6, Registers::R1.get_val(&c).unwrap())
-    }
-
-    #[test]
-    fn test_value_of_r1_end_of_test_file_2() {
-        let mut c = Context::new();
-        c.change_file_context();
-        let contents = fs::read_to_string("test/test2.a").expect("Should have been able to read the file");
-        let _ = interp_input(contents, &mut c);
-        assert_eq!(6, Registers::R1.get_val(&c).unwrap())
-    }
-
-    #[test]
-    fn test_of_test_file_3() {
-        let mut c = Context::new();
-        c.change_file_context();
-        let contents = fs::read_to_string("test/test3.a").expect("Should have been able to read the file");
-        let res = interp_input(contents, &mut c);
-        assert!(matches!(res, Err(_)))
-    }
+    println!("R1 := {:?}", context.get_register_value(&Registers::R1));
+    println!("R2 := {:?}", context.get_register_value(&Registers::R2));
 }

@@ -1,7 +1,9 @@
 use std::fmt;
 use std::fmt::Formatter;
-use crate::context::Context;
-use crate::error::Error;
+use crate::context::ContextManip;
+use crate::error::EvalError;
+// use crate::context::ContextManip;
+// use crate::error::EvalError;
 
 #[derive(Debug, Eq, Hash, PartialEq, PartialOrd, Copy, Clone)]
 pub enum Registers {
@@ -9,12 +11,12 @@ pub enum Registers {
 }
 
 impl Registers {
-    pub fn get_val(&self, c: &Context) -> Result<i32, Error> {
-        c.get(*self)
+    pub fn get_val<C>(&self, c: &C) -> Result<i32, EvalError> where C : ContextManip {
+        c.get_register_value(self)
     }
 
-    pub fn set_val(&self, value: i32, c: &mut Context) {
-        c.set(*self, value)
+    pub fn set_val<C>(&self, value: i32, c: &mut C) where C : ContextManip {
+        c.set_register_value(self, value)
     }
 }
 
@@ -39,7 +41,7 @@ pub enum Value {
 }
 
 impl Value {
-    pub fn get_val(&self, c: &Context) -> Result<i32, Error> {
+    pub fn get_val<C>(&self, c: &C) -> Result<i32, EvalError> where C : ContextManip {
         match self {
             Value::Reg(r) => r.get_val(c),
             Value::Num(nb) => Ok(*nb),
