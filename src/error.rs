@@ -9,7 +9,8 @@ pub enum EvalError {
     BranchNotInFileContext,
     DivisionByZero(Value),
     PCSegFault(usize, usize),
-    NoFileInputed
+    NoFileInputed,
+    LabelUndefined(String)
 }
 
 impl Display for EvalError {
@@ -21,7 +22,8 @@ impl Display for EvalError {
             EvalError::BranchNotInFileContext => write!(f,"{}Cannot branch in this context !", err_begin),
             EvalError::DivisionByZero(v) => write!(f,"{}Cannot divide, {} is evaluated to zero", err_begin, v.to_string().yellow()),
             EvalError::PCSegFault(n, m) => write!(f,"{}Program counter {} is too far in the program, {} is the line of end", err_begin, n.to_string().yellow(), m.to_string().yellow()),
-            EvalError::NoFileInputed => write!(f,"{}No file is inputed !", err_begin)
+            EvalError::NoFileInputed => write!(f,"{}No file is inputed !", err_begin),
+            EvalError::LabelUndefined(l) => write!(f,"{}The label {} is undefined", err_begin, l)
         }
     }
 }

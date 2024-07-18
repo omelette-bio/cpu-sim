@@ -16,10 +16,10 @@ pub trait ContextManip {
     fn push_stack(&mut self, value: i32);
 }
 
-pub trait ProgrammeCounterManip {
-    fn increment_program_counter(&self);
-    fn add_program_counter(&self, value: usize);
-    fn sub_program_counter(&self, value: usize);
+pub trait ProgramCounterManip {
+    fn increment_program_counter(&mut self);
+    fn add_program_counter(&mut self, value: usize);
+    fn search_label(&self, label: String) -> Result<i32, EvalError>;
 }
 
 
@@ -42,6 +42,17 @@ pub struct LineContext {
 impl Default for FileContext {
     fn default() -> Self {
         FileContext { register_table: HashMap::default(), stack: Stack::default(), exec_stack: Vec::new(), program_counter: 0, label_map: HashMap::default() }
+    }
+}
+
+impl ProgramCounterManip for FileContext {
+    fn increment_program_counter(&mut self) { self.program_counter += 1 }
+    fn add_program_counter(&mut self, value: usize) { self.program_counter = self.program_counter + value }
+    fn search_label(&self, label: String) -> Result<i32, EvalError> {
+        match self.label_map.get(&label) {
+            Some(&value) => Ok(value as i32),
+            None => Err(EvalError::LabelUndefined(label.clone()))
+        }
     }
 }
 

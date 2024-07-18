@@ -3,26 +3,31 @@ mod error;
 mod stack;
 mod data_manipulation;
 mod opcodes;
+mod eval;
 
 use crate::context::{ContextManip, FileContext, LineContext};
 use crate::context::Context::File;
 use crate::data_manipulation::{Registers, Value};
 use crate::opcodes::OpCode;
 
+use eval::eval_file;
+
 fn main() {
     let mut fc = FileContext::default();
-    fc.push_stack(3);
-    fc.push_stack(6);
-    println!("{:?}, {:?}", fc.pop_stack(), fc.pop_stack());
-
+    
     let mut context = FileContext::default();
-    let inst1 = OpCode::MOVE(Value::Num(4), Registers::R1);
-    let inst2 = OpCode::MOVE(Value::Num(5), Registers::R2);
-    let inst3 = OpCode::ADD(Value::Reg(Registers::R1), Registers::R2);
+    
+    let program = vec!(
+        OpCode::MOVE(Value::Num(4), Registers::R1), 
+        OpCode::MOVE(Value::Num(5), Registers::R2), 
+        OpCode::ADD(Value::Reg(Registers::R1), Registers::R2),
+        OpCode::GOTO(String::from("zizi"))
+    );
 
-    inst1.eval(&mut context).expect("TODO: panic message");
-    inst2.eval(&mut context).expect("");
-    inst3.eval(&mut context).expect("");
+    for i in 0..program.len() {
+        let res = eval_file(&program[i], &mut context);
+        if let Err(m) = res {println!("{}", m);}
+    }
 
     println!("R1 := {:?}", context.get_register_value(&Registers::R1));
     println!("R2 := {:?}", context.get_register_value(&Registers::R2));
