@@ -20,6 +20,7 @@ pub trait ProgramCounterManip {
     fn increment_program_counter(&mut self);
     fn add_program_counter(&mut self, value: usize);
     fn search_label(&self, label: String) -> Result<i32, EvalError>;
+    fn match_label_value(&mut self, label: String, line: usize);
 }
 
 
@@ -53,6 +54,9 @@ impl ProgramCounterManip for FileContext {
             Some(&value) => Ok(value as i32),
             None => Err(EvalError::LabelUndefined(label.clone()))
         }
+    }
+    fn match_label_value(&mut self, label: String, line: usize) {
+        self.label_map.insert(label, line);
     }
 }
 

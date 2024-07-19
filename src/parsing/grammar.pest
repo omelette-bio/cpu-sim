@@ -26,9 +26,14 @@ one_add_opcode = {
 jump_opcode = {
     "JUMP"
 }
+label_declaration = {
+	(('a'..'z')|('A'..'Z')|('0'..'9'))+ ~ ":"
+}
+
 
 command = {
     whitespace* ~ two_add_opcode ~ " " ~ (digit | register) ~ " " ~ register ~ (";" ~ whitespace* ~ command)?
   | whitespace* ~ one_add_opcode ~ " " ~ register ~ (";" ~ whitespace* ~ command)?
   | whitespace* ~ jump_opcode ~ " " ~ (digit | register) ~ (";" ~ whitespace* ~ command)?
+  | whitespace* ~ label_declaration ~ ( whitespace* ~ command )?
 }

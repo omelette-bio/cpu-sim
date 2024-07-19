@@ -33,15 +33,37 @@ pub fn eval_file<C> (opc: &OpCode, c: &mut C) -> Result<(), EvalError>
 where C: ContextManip + ProgramCounterManip
 {
     match opc {
+        OpCode::LABEL(_) => Ok(()),
         OpCode::JUMP(_) => todo!(),
         OpCode::BEZ(_,_) => todo!(),
         OpCode::BNEZ(_,_) => todo!(),
         OpCode::GOTO(l) => {
-            c.search_label(l.to_string())?;
+            let line = c.search_label(l.to_string())?;
+            println!("going to line {}", line);
             Ok(())
         },
         _ => opc.eval(c)
     }
+}
+
+pub fn fetch_label<C> (program: &Vec<OpCode>, c: &mut C) -> Result<(), EvalError>
+where C : ProgramCounterManip
+{
+    for opc in 0..program.len() {
+        if let OpCode::LABEL(s) = &program[opc] {
+            match c.search_label(s.to_string()) {
+                Ok(_) =>  return Err(EvalError::LabelAlreadyDefined(s.to_string())),
+                Err(_) => c.match_label_value(s.to_string(), opc)
+            }
+        }
+        // match opc {
+        //     OpCode::LABEL(s) => {
+        //         match c.search_label(s) {
+        //         }
+        //     }
+        // }
+    }
+    Ok(())
 }
 
 //
