@@ -1,5 +1,6 @@
 MOVE $0 R1;
-JUMP $7;
+PUSH R1;
+JUMP $5;
 POP R1;
 printf R1;
 ADD $1 R1;
